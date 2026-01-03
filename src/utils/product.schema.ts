@@ -7,6 +7,7 @@ export const productSchema = z.object({
   stock: z.number().min(0, "Stock must be positive"),
   category: z.string().min(2, "Category is required"),
   description: z.string().optional(),
+  image: z.string().optional(),
 });
 
 export type ProductInput = z.infer<typeof productSchema>;

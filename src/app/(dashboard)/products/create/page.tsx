@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { productSchema } from "@/utils/product.schema";
 
 export default function CreateProductPage() {
   const router = useRouter();
@@ -14,26 +13,9 @@ export default function CreateProductPage() {
 
     const formData = new FormData(e.currentTarget);
 
-    const data = {
-      name: formData.get("name"),
-      sku: formData.get("sku"),
-      price: Number(formData.get("price")),
-      stock: Number(formData.get("stock")),
-      category: formData.get("category"),
-      description: formData.get("description"),
-    };
-
-    const parsed = productSchema.safeParse(data);
-
-    if (!parsed.success) {
-      setError(parsed.error.errors[0].message);
-      return;
-    }
-
     const res = await fetch("/api/products", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(parsed.data),
+      body: formData, // IMPORTANT: multipart/form-data
     });
 
     if (!res.ok) {
@@ -51,12 +33,56 @@ export default function CreateProductPage() {
       {error && <p className="text-red-600 mb-3">{error}</p>}
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input name="name" placeholder="Product Name" className="input" required />
-        <input name="sku" placeholder="SKU" className="input" required />
-        <input name="price" type="number" placeholder="Price" className="input" required />
-        <input name="stock" type="number" placeholder="Stock" className="input" required />
-        <input name="category" placeholder="Category" className="input" required />
-        <textarea name="description" placeholder="Description" className="input" />
+        <input
+          name="name"
+          placeholder="Product Name"
+          className="input"
+          required
+        />
+
+        <input
+          name="sku"
+          placeholder="SKU"
+          className="input"
+          required
+        />
+
+        <input
+          name="price"
+          type="number"
+          placeholder="Price"
+          className="input"
+          required
+        />
+
+        <input
+          name="stock"
+          type="number"
+          placeholder="Stock"
+          className="input"
+          required
+        />
+
+        <input
+          name="category"
+          placeholder="Category"
+          className="input"
+          required
+        />
+
+        <textarea
+          name="description"
+          placeholder="Description"
+          className="input"
+        />
+
+        {/* IMAGE UPLOAD */}
+        <input
+          type="file"
+          name="image"
+          accept="image/*"
+          className="input"
+        />
 
         <button className="bg-black text-white px-4 py-2 rounded">
           Create Product

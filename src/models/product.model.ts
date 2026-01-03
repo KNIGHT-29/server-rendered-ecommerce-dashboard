@@ -8,7 +8,9 @@ const ProductSchema = new Schema(
     stock: { type: Number, required: true },
     category: { type: String, required: true },
     description: String,
-    images: [String],
+    image: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
