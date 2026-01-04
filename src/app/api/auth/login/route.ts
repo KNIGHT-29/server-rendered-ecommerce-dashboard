@@ -1,31 +1,42 @@
 import { NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
 import { connectDB } from "@/lib/db";
 import Admin from "@/models/admin.model";
-import { signToken } from "@/lib/auth";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 export async function POST(req: Request) {
-  const { email, password } = await req.json();
-
   await connectDB();
+  const { email, password } = await req.json();
 
   const admin = await Admin.findOne({ email });
   if (!admin) {
-    return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+    return NextResponse.json(
+      { message: "Invalid credentials" },
+      { status: 401 }
+    );
   }
 
-  const valid = await bcrypt.compare(password, admin.password);
-  if (!valid) {
-    return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+  const isMatch = await bcrypt.compare(password, admin.password);
+  if (!isMatch) {
+    return NextResponse.json(
+      { message: "Invalid credentials" },
+      { status: 401 }
+    );
   }
 
-  const token = signToken({ id: admin._id, role: admin.role });
+  const token = jwt.sign(
+    { id: admin._id, role: admin.role },
+    process.env.JWT_SECRET!,
+    { expiresIn: "7d" }
+  );
 
-  const response = NextResponse.json({ success: true });
-  response.cookies.set("admin-token", token, {
+  const res = NextResponse.json({ success: true });
+
+  res.cookies.set("token", token, {
     httpOnly: true,
+    sameSite: "lax",
     path: "/",
   });
 
-  return response;
+  return res;
 }
