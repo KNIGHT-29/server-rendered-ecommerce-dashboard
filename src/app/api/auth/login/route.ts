@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 
 export async function POST(req: Request) {
   await connectDB();
+
   const { email, password } = await req.json();
 
   const admin = await Admin.findOne({ email });
@@ -25,14 +26,15 @@ export async function POST(req: Request) {
   }
 
   const token = jwt.sign(
-    { id: admin._id, role: admin.role },
+    { id: admin._id.toString(), role: admin.role },
     process.env.JWT_SECRET!,
     { expiresIn: "7d" }
   );
 
   const res = NextResponse.json({ success: true });
 
-  res.cookies.set("token", token, {
+  // ✅ MUST MATCH DASHBOARD + LOGOUT
+  res.cookies.set("admin-token", token, {
     httpOnly: true,
     sameSite: "lax",
     path: "/",

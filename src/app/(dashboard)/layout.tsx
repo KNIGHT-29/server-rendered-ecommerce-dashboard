@@ -8,7 +8,9 @@ export default async function DashboardLayout({
 }) {
   // cookies() is async in Next.js 15+
   const cookieStore = await cookies();
-  const token = cookieStore.get("token");
+
+  // MUST match login cookie name
+  const token = cookieStore.get("admin-token");
 
   // Protect all dashboard routes
   if (!token) {
