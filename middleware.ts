@@ -1,22 +1,26 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(req: NextRequest) {
-  const { pathname, method } = req.nextUrl;
+  const { pathname } = req.nextUrl;
+  const method = req.method;
 
-  // ✅ Allow preflight
+  // Allow preflight requests
   if (method === "OPTIONS") {
     return NextResponse.next();
   }
 
-  // ✅ Always allow API routes
-  if (pathname.startsWith("/api")) {
-    return NextResponse.next();
+  // Protect dashboard routes
+  if (pathname.startsWith("/products") || pathname.startsWith("/dashboard")) {
+    const token = req.cookies.get("admin-token")?.value;
+
+    if (!token) {
+      return NextResponse.redirect(new URL("/login", req.url));
+    }
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/products/:path*", "/dashboard/:path*"],
 };
