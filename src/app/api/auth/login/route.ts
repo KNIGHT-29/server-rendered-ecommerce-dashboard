@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import Admin from "@/models/admin.model";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import { sign } from "jsonwebtoken";
 
 export async function POST(req: Request) {
   await connectDB();
@@ -25,16 +25,15 @@ export async function POST(req: Request) {
     );
   }
 
-  const token = jwt.sign(
+  const token = sign(
     { id: admin._id.toString(), role: admin.role },
-    process.env.JWT_SECRET!,
+    process.env.JWT_SECRET as string,
     { expiresIn: "7d" }
   );
 
   const res = NextResponse.json({ success: true });
 
-  // ✅ MUST MATCH DASHBOARD + LOGOUT
-  res.cookies.set("admin-token", token, {
+  res.cookies.set("token", token, {
     httpOnly: true,
     sameSite: "lax",
     path: "/",
