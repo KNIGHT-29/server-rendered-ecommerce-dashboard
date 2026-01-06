@@ -1,21 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl;
-  const method = req.method;
+  const token = req.cookies.get("token")?.value;
 
-  // Allow preflight requests
-  if (method === "OPTIONS") {
-    return NextResponse.next();
-  }
-
-  // Protect dashboard routes
-  if (pathname.startsWith("/products") || pathname.startsWith("/dashboard")) {
-    const token = req.cookies.get("admin-token")?.value;
-
-    if (!token) {
-      return NextResponse.redirect(new URL("/login", req.url));
-    }
+  if (
+    (req.nextUrl.pathname.startsWith("/products") ||
+     req.nextUrl.pathname.startsWith("/dashboard")) &&
+    !token
+  ) {
+    return NextResponse.redirect(new URL("/login", req.url));
   }
 
   return NextResponse.next();
