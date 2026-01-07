@@ -10,70 +10,95 @@ export default async function ProductsPage() {
   const products = await Product.find().sort({ createdAt: -1 }).lean();
 
   return (
-    <div>
-      <h2 className="text-2xl font-semibold mb-4">Products</h2>
+    <div className="card">
+      {/* HEADER */}
+      <div className="card-header flex items-center justify-between">
+        <h2 className="text-lg font-semibold text-slate-800">
+          Products
+        </h2>
 
-      {/* CREATE PRODUCT BUTTON */}
-      <div className="mb-4">
         <Link
           href="/products/create"
-          className="bg-black text-white px-4 py-2 rounded"
+          className="btn btn-primary"
         >
           + Create Product
         </Link>
       </div>
 
-      {products.length === 0 && (
-        <p className="text-gray-500">No products found.</p>
-      )}
+      {/* BODY */}
+      <div className="card-body">
+        {products.length === 0 && (
+          <p className="text-slate-500 text-sm">
+            No products found.
+          </p>
+        )}
 
-      {products.length > 0 && (
-        <div className="overflow-x-auto bg-white shadow rounded">
-          <table className="min-w-full border">
-            <thead className="bg-gray-200">
-              <tr>
-                <th className="p-3 text-left">Image</th>
-                <th className="p-3 text-left">Name</th>
-                <th className="p-3 text-left">SKU</th>
-                <th className="p-3 text-left">Price</th>
-                <th className="p-3 text-left">Stock</th>
-                <th className="p-3 text-left">Category</th>
-                <th className="p-3 text-left">Actions</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {products.map((product: any) => (
-                <tr key={product._id.toString()} className="border-t">
-                  {/* IMAGE */}
-                  <td className="p-3">
-                    {product.image ? (
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="h-12 w-12 object-cover rounded"
-                      />
-                    ) : (
-                      <span className="text-gray-400 text-sm">No image</span>
-                    )}
-                  </td>
-
-                  <td className="p-3">{product.name}</td>
-                  <td className="p-3">{product.sku}</td>
-                  <td className="p-3">₹{product.price}</td>
-                  <td className="p-3">{product.stock}</td>
-                  <td className="p-3">{product.category}</td>
-
-                  {/* ACTIONS (CLIENT COMPONENT) */}
-                  <td className="p-3">
-                    <ProductActions id={product._id.toString()} />
-                  </td>
+        {products.length > 0 && (
+          <div className="overflow-x-auto">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th className="th">Image</th>
+                  <th className="th">Name</th>
+                  <th className="th">SKU</th>
+                  <th className="th">Price</th>
+                  <th className="th">Stock</th>
+                  <th className="th">Category</th>
+                  <th className="th">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+              </thead>
+
+              <tbody>
+                {products.map((product: any) => (
+                  <tr key={product._id.toString()}>
+                    {/* IMAGE */}
+                    <td className="td">
+                      {product.image ? (
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          className="h-12 w-12 rounded-md object-cover border border-slate-200"
+                        />
+                      ) : (
+                        <span className="text-slate-400 text-sm">
+                          No image
+                        </span>
+                      )}
+                    </td>
+
+                    <td className="td font-medium">
+                      {product.name}
+                    </td>
+
+                    <td className="td text-slate-600">
+                      {product.sku}
+                    </td>
+
+                    <td className="td">
+                      ₹{product.price}
+                    </td>
+
+                    <td className="td">
+                      {product.stock}
+                    </td>
+
+                    <td className="td">
+                      {product.category}
+                    </td>
+
+                    {/* ACTIONS */}
+                    <td className="td">
+                      <ProductActions
+                        id={product._id.toString()}
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

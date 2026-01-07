@@ -29,14 +29,14 @@ export default function LoginPage() {
       return;
     }
 
-    // 🔥 HARD REDIRECT (FIXES EVERYTHING)
+    // HARD REDIRECT (correct for cookie-based auth)
     window.location.href = "/products";
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black">
-      <div className="bg-white p-6 rounded shadow w-full max-w-sm">
-        <h2 className="text-xl font-semibold mb-4 text-center">
+    <div className="min-h-screen flex items-center justify-center bg-slate-100">
+      <div className="w-full max-w-sm bg-white border border-slate-200 rounded-xl shadow-sm p-6">
+        <h2 className="text-xl font-semibold text-slate-800 mb-4 text-center">
           Admin Login
         </h2>
 
@@ -52,7 +52,9 @@ export default function LoginPage() {
             type="email"
             required
             placeholder="Email"
-            className="w-full border px-3 py-2 rounded"
+            className="w-full rounded-md border border-slate-300 px-3 py-2
+                       text-sm text-slate-800 placeholder-slate-400
+                       focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
 
           <input
@@ -60,12 +62,16 @@ export default function LoginPage() {
             type="password"
             required
             placeholder="Password"
-            className="w-full border px-3 py-2 rounded"
+            className="w-full rounded-md border border-slate-300 px-3 py-2
+                       text-sm text-slate-800 placeholder-slate-400
+                       focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
 
           <button
             disabled={loading}
-            className="w-full bg-black text-white py-2 rounded"
+            className="w-full rounded-md bg-indigo-600 text-white py-2
+                       text-sm font-medium hover:bg-indigo-700
+                       disabled:opacity-60 transition-colors"
           >
             {loading ? "Logging in..." : "Login"}
           </button>

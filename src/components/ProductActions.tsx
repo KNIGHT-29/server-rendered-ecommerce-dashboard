@@ -20,17 +20,17 @@ export default function ProductActions({ id }: { id: string }) {
   }
 
   return (
-    <div className="space-x-3">
+    <div className="flex items-center gap-4">
       <Link
         href={`/products/${id}/edit`}
-        className="text-blue-600 hover:underline"
+        className="text-indigo-600 hover:text-indigo-800 hover:underline text-sm font-medium"
       >
         Edit
       </Link>
 
       <button
         onClick={handleDelete}
-        className="text-red-600 hover:underline"
+        className="text-red-600 hover:text-red-800 hover:underline text-sm font-medium"
       >
         Delete
       </button>

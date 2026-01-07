@@ -6,35 +6,33 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // cookies() is async in Next.js 15+
   const cookieStore = await cookies();
-
-  // ✅ MUST MATCH LOGIN API COOKIE NAME
   const token = cookieStore.get("token");
 
-  // Protect all dashboard routes
-  if (!token) {
-    redirect("/login");
-  }
+  if (!token) redirect("/login");
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow px-6 py-4 flex gap-6 items-center">
-        <a href="/products" className="font-semibold">
+    <div className="min-h-screen bg-slate-100">
+      <nav className="bg-white border-b border-slate-200 px-8 py-4 flex items-center">
+        <h1 className="text-lg font-bold text-slate-800">
+          Admin Dashboard
+        </h1>
+
+        <a
+          href="/products"
+          className="ml-8 text-sm font-medium text-slate-600 hover:text-indigo-600"
+        >
           Products
         </a>
 
         <form action="/api/auth/logout" method="POST" className="ml-auto">
-          <button
-            type="submit"
-            className="text-red-600 font-semibold"
-          >
-            Logout
-          </button>
+          <button className="btn btn-outline">Logout</button>
         </form>
       </nav>
 
-      <main className="p-6">{children}</main>
+      <main className="max-w-6xl mx-auto p-8">
+        {children}
+      </main>
     </div>
   );
 }
