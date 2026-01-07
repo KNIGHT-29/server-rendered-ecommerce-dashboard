@@ -94,8 +94,8 @@ CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/<your-username>/<repo-name>.git
-cd <repo-name>
+git clone https://github.com/KNIGHT-29/server-rendered-ecommerce-dashboard.git
+cd server-rendered-ecommerce-dashboard
 npm install
 cp .env.example .env.local
 npm run dev
